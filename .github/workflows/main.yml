@@ -1,26 +1,17 @@
-name: Deploy to production
+name: Auto test
 
 on:
   push:
     branches:
-      - main
-      - automation/bors/try
+      - automation/bors/auto
 
 jobs:
-  ec2_runner:
-    name: Test EC2 runner
-    runs-on: ec2-ubuntu26.04-c8a.12xlarge-x64-linux
-    steps:
-      - name: Checkout sources
-        uses: actions/checkout@v7
-      - run: ls .
-      - run: uname -a
   test:
     name: Test before deploy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
 
       - name: Print rustup components
         run: |
@@ -30,21 +21,3 @@ jobs:
       - name: Run command
         run:
           exit 0
-  deploy:
-    name: Deployment
-    runs-on: ubuntu-latest
-    environment: production
-    concurrency:
-      group: production
-    #      cancel-in-progress: true
-    steps:
-      - name: deploy
-        run: echo "Deploying bors-kindergarten"
-    # Test cancel
-  deploy2:
-    name: Deployment staging
-    runs-on: ubuntu-latest
-    environment: staging
-    steps:
-      - name: deploy
-        run: echo "Deploying to staging"
